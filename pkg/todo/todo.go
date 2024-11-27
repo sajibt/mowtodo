@@ -288,7 +288,13 @@ func parseTaskDetails(line string) (description, priority, dueDate string, err e
 	// Handle cases where the line does not have the expected parts
 	if len(parts) > 0 {
 		// Extract description (assuming description is everything before the first '|')
-		description = strings.TrimSpace(parts[0][3:]) // Skip the checkbox "[ ]" or "[X]"
+
+		// Safely extract the description
+		if len(parts[0]) >= 3 {
+			description = strings.TrimSpace(parts[0][3:]) // Skip the checkbox "[ ]" or "[X]"
+		} else {
+			description = strings.TrimSpace(parts[0]) // Use the part as-is if it's too short
+		}
 
 		// Check if there are priority and due date fields
 		if len(parts) > 1 {
